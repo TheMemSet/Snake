@@ -4,13 +4,14 @@
 #include <iostream> // TEMPORARY
 
 void update (Grid*);
+void userInput (Snake*);
 
 int main()
 {
     sf::RenderWindow window (sf::VideoMode (1280, 720), "Temporary title");
     window.setFramerateLimit (30);
 
-    Grid grid (30, 30);
+    Grid grid (64, 36);
 
     sf::Thread updateThread (&update,&grid);
 
@@ -35,25 +36,26 @@ int main()
         window.display ();
     }
     grid.terminate();
-    updateThread.terminate();
+    updateThread.wait();
 
     return 0;
 }
 
 void update (Grid *grid)
 {
-    sf::Keyboard::Key lastKeyPressed = sf::Keyboard::Right;
-
     sf::Time durationGoal = sf::seconds (1. / 8);
     sf::Time elapsedTime;
     sf::Clock clock;
 
-    Snake snake (30, 30);
-
     uint16_t headX, headY;
     std::vector <uint16_t> snakeX, snakeY;
 
+    Snake snake (64, 36);
+
+    sf::Thread userInputThread (&userInput, &snake);
+
     clock.restart();
+    userInputThread.launch();
     while (grid->isAlive())
     {
         //// Snake and grid updates start here
@@ -75,29 +77,6 @@ void update (Grid *grid)
             grid->setCell (snakeX [i], snakeY [i], sf::Color::Yellow);
         }
 
-        //// Keyboard updates start here
-        if (sf::Keyboard::isKeyPressed (sf::Keyboard::Up) && lastKeyPressed != sf::Keyboard::Up)
-        {
-            snake.changeDirection (up);
-            lastKeyPressed = sf::Keyboard::Up;
-        }
-        else if (sf::Keyboard::isKeyPressed (sf::Keyboard::Right) && lastKeyPressed != sf::Keyboard::Right)
-        {
-            snake.changeDirection (right);
-            lastKeyPressed = sf::Keyboard::Right;
-        }
-        else if (sf::Keyboard::isKeyPressed (sf::Keyboard::Down) && lastKeyPressed != sf::Keyboard::Down)
-        {
-            snake.changeDirection (down);
-            lastKeyPressed = sf::Keyboard::Down;
-        }
-        else if (sf::Keyboard::isKeyPressed (sf::Keyboard::Left) && lastKeyPressed != sf::Keyboard::Left)
-        {
-            snake.changeDirection (left);
-            lastKeyPressed = sf::Keyboard::Left;
-        }
-
-
         //// Time updates start here
         elapsedTime = clock.restart();
 
@@ -106,5 +85,38 @@ void update (Grid *grid)
             sf::sleep (durationGoal - elapsedTime);
         }
         clock.restart();
+    }
+    snake.terminate();
+    userInputThread.wait();
+}
+
+void userInput (Snake *snake)
+{
+    sf::Keyboard::Key lastKeyPressed = sf::Keyboard::Right;
+
+    while (snake->isAlive())
+    {
+        if (sf::Keyboard::isKeyPressed (sf::Keyboard::Up) && lastKeyPressed != sf::Keyboard::Up)
+        {
+            snake->changeDirection (up);
+            lastKeyPressed = sf::Keyboard::Up;
+        }
+        else if (sf::Keyboard::isKeyPressed (sf::Keyboard::Right) && lastKeyPressed != sf::Keyboard::Right)
+        {
+            snake->changeDirection (right);
+            lastKeyPressed = sf::Keyboard::Right;
+        }
+        else if (sf::Keyboard::isKeyPressed (sf::Keyboard::Down) && lastKeyPressed != sf::Keyboard::Down)
+        {
+            snake->changeDirection (down);
+            lastKeyPressed = sf::Keyboard::Down;
+        }
+        else if (sf::Keyboard::isKeyPressed (sf::Keyboard::Left) && lastKeyPressed != sf::Keyboard::Left)
+        {
+            snake->changeDirection (left);
+            lastKeyPressed = sf::Keyboard::Left;
+        }
+
+        sf::sleep (sf::milliseconds (10));
     }
 }

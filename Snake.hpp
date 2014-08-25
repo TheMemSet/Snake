@@ -47,6 +47,7 @@ public:
     void reset();
     void getSnake (uint16_t &hX, uint16_t &hY, std::vector <uint16_t> &vectX, std::vector <uint16_t> &vectY) const;
     void changeDirection (Direction);
+    void terminate();
 };
 
 #endif // SNAKE_HPP_INCLUDED

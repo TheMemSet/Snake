@@ -88,3 +88,8 @@ void Snake::changeDirection (Direction newDir)
         segment [0].next = newDir;
     }
 }
+
+void Snake::terminate()
+{
+    alive = false;
+}
