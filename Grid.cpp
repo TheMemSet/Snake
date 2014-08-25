@@ -1,8 +1,13 @@
 #include <SFML/Graphics.hpp>
+#include <chrono>
+#include <iostream> // TEMPORARY
 #include "Grid.hpp"
 
 Grid::Grid (uint16_t width, uint16_t height)
 {
+    seed = std::chrono::system_clock::now().time_since_epoch().count();
+    generator.seed (seed);
+
     this->width = width;
     this->height = height;
 
@@ -53,6 +58,14 @@ void Grid::update()
 {
     vertArray.clear();
 
+    for (uint16_t i = 0;i < fruit.size();++i)
+    {
+        vertArray.append (sf::Vertex (sf::Vector2f (CELLSIZE * fruit [i].first, CELLSIZE * fruit [i].second), sf::Color::Green));
+        vertArray.append (sf::Vertex (sf::Vector2f (CELLSIZE * (fruit [i].first + 1) - GRID_GAP, CELLSIZE * fruit [i].second), sf::Color::Green));
+        vertArray.append (sf::Vertex (sf::Vector2f (CELLSIZE * (fruit [i].first + 1) - GRID_GAP, CELLSIZE * (fruit [i].second + 1) - GRID_GAP), sf::Color::Green));
+        vertArray.append (sf::Vertex (sf::Vector2f (CELLSIZE * fruit [i].first, CELLSIZE * (fruit [i].second + 1) - GRID_GAP), sf::Color::Green));
+    }
+
     for (uint16_t i = 0;i < width;++i)
     {
         for (uint16_t j = 0;j < height;++j)
@@ -83,5 +96,27 @@ bool Grid::isAlive() const
 void Grid::terminate()
 {
     alive = false;
+}
+
+void Grid::addFruit()
+{
+    int16_t rnd = generator() % (64 * 36) + 1; // CONST
+
+    for (uint16_t xx = 0;xx < width;++xx)
+    {
+        for (uint16_t yy = 0;yy < height;++yy)
+        {
+            if (cell [xx] [yy] == sf::Color::Black)
+            {
+                --rnd;
+            }
+
+            if (!rnd)
+            {
+                fruit.push_back (std::make_pair (xx, yy));
+                return;
+            }
+        }
+    }
 }
 

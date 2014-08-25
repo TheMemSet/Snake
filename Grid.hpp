@@ -4,6 +4,10 @@
 #include <SFML/Graphics.hpp>
 #include <vector>
 #include <cinttypes>
+#include <random>
+#include <utility>
+#include "Snake.hpp"
+
 
 class Grid : public sf::Drawable
 {
@@ -14,6 +18,9 @@ class Grid : public sf::Drawable
     const uint16_t CELLSIZE = 20;
     const uint8_t GRID_GAP = 1;
     bool alive;
+    uint64_t seed;
+    std::mt19937 generator;
+    std::vector <std::pair <uint16_t,uint16_t>> fruit;
 
     virtual void draw (sf::RenderTarget &target, sf::RenderStates states) const;
 
@@ -27,6 +34,7 @@ public:
     void      update();
     bool      isAlive() const;
     void      terminate();
+    void      addFruit();
 };
 
 #endif // GRID_HPP_INCLUDED

@@ -11,7 +11,7 @@ int main()
     sf::RenderWindow window (sf::VideoMode (1280, 720), "Temporary title");
     window.setFramerateLimit (30);
 
-    Grid grid (64, 36);
+    Grid grid (64, 36); // CONST
 
     sf::Thread updateThread (&update,&grid);
 
@@ -53,6 +53,8 @@ void update (Grid *grid)
     Snake snake (64, 36);
 
     sf::Thread userInputThread (&userInput, &snake);
+
+    grid->addFruit();
 
     clock.restart();
     userInputThread.launch();
