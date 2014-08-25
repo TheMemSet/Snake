@@ -75,6 +75,15 @@ void Snake::update()
     {
         segment [i].next = segment [i - 1].next;
     }
+
+    for (uint16_t i = 1;i < segment.size();++i)
+    {
+        if ((headX == segment [i].x) && (headY == segment [i].y))
+        {
+            alive = false;
+            return;
+        }
+    }
 }
 
 void Snake::changeDirection (Direction newDir)
