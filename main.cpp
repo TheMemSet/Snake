@@ -96,25 +96,32 @@ void userInput (Snake *snake)
 
     while (snake->isAlive())
     {
-        if (sf::Keyboard::isKeyPressed (sf::Keyboard::Up) && lastKeyPressed != sf::Keyboard::Up)
+        if (snake->moved)
         {
-            snake->changeDirection (up);
-            lastKeyPressed = sf::Keyboard::Up;
-        }
-        else if (sf::Keyboard::isKeyPressed (sf::Keyboard::Right) && lastKeyPressed != sf::Keyboard::Right)
-        {
-            snake->changeDirection (right);
-            lastKeyPressed = sf::Keyboard::Right;
-        }
-        else if (sf::Keyboard::isKeyPressed (sf::Keyboard::Down) && lastKeyPressed != sf::Keyboard::Down)
-        {
-            snake->changeDirection (down);
-            lastKeyPressed = sf::Keyboard::Down;
-        }
-        else if (sf::Keyboard::isKeyPressed (sf::Keyboard::Left) && lastKeyPressed != sf::Keyboard::Left)
-        {
-            snake->changeDirection (left);
-            lastKeyPressed = sf::Keyboard::Left;
+            if (sf::Keyboard::isKeyPressed (sf::Keyboard::Up) && lastKeyPressed != sf::Keyboard::Up)
+            {
+                snake->changeDirection (up);
+                lastKeyPressed = sf::Keyboard::Up;
+                snake->moved = false;
+            }
+            else if (sf::Keyboard::isKeyPressed (sf::Keyboard::Right) && lastKeyPressed != sf::Keyboard::Right)
+            {
+                snake->changeDirection (right);
+                lastKeyPressed = sf::Keyboard::Right;
+                snake->moved = false;
+            }
+            else if (sf::Keyboard::isKeyPressed (sf::Keyboard::Down) && lastKeyPressed != sf::Keyboard::Down)
+            {
+                snake->changeDirection (down);
+                lastKeyPressed = sf::Keyboard::Down;
+                snake->moved = false;
+            }
+            else if (sf::Keyboard::isKeyPressed (sf::Keyboard::Left) && lastKeyPressed != sf::Keyboard::Left)
+            {
+                snake->changeDirection (left);
+                lastKeyPressed = sf::Keyboard::Left;
+                snake->moved = false;
+            }
         }
 
         sf::sleep (sf::milliseconds (10));

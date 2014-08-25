@@ -16,6 +16,8 @@ Snake::Snake(uint16_t gridWidth, uint16_t gridHeight)
     offY [2] = 1;
     offY [3] = 0;
 
+    moved = true;
+
     reset();
 }
 
@@ -84,6 +86,8 @@ void Snake::update()
             return;
         }
     }
+
+    moved = true;
 }
 
 void Snake::changeDirection (Direction newDir)
